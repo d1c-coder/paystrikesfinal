@@ -50,7 +50,7 @@ app.post('/api/v1/third-party/resend-webhook', upload.none(), (req, res) => {
 
 
 // Webhook route
-const FRONTEND_API_URL = 'https://dimpaybackend.onrender.com/api/all-virtual-accounts'; // Update this URL to the correct one
+const FRONTEND_API_URL = 'https://paystrikesfinal.onrender.com/api/all-virtual-accounts'; // Update this URL to the correct one
 
 // POST endpoint to handle the webhook
 app.post('/handleTransaction', (req, res) => {
