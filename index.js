@@ -138,7 +138,7 @@ app.post('/api/create-virtual-account', async (req, res) => {
       nin,
       preferred_bank: '090287',
       notification_status: '0',
-      settlement_type: '1',
+      settlement_type: '0',
     };
 
     const response = await axios.post(
@@ -445,7 +445,7 @@ app.post('/api/virtual-accounts/temporary', upload.none(), async (req, res) => {
         amount,
         invoice_reference,
         customer_phone,
-        my_preferred_bank_code:  '000012'
+        my_preferred_bank_code:  '090287'
       },
       {
         headers: {
