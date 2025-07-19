@@ -136,7 +136,7 @@ app.post('/api/create-virtual-account', async (req, res) => {
       phone_number,
       bvn,
       nin,
-      preferred_bank: '090287',
+      preferred_bank: '000012',
       notification_status: '0',
       settlement_type: '0',
     };
@@ -445,7 +445,7 @@ app.post('/api/virtual-accounts/temporary', upload.none(), async (req, res) => {
         amount,
         invoice_reference,
         customer_phone,
-        my_preferred_bank_code:  '090287'
+        my_preferred_bank_code:  '000012'
       },
       {
         headers: {
