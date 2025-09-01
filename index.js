@@ -424,37 +424,34 @@ app.post('/api/airtime-purchase', async (req, res) => {
     });
   }
 });
-
 app.post('/api/virtual-accounts/temporary', upload.none(), async (req, res) => {
   try {
-    // Destructure form data from the request body
     const { amount, customer_phone, my_preferred_bank_code } = req.body;
 
-    // Validate required fields
-    if (!amount || !customer_phone || !my_preferred_bank_code) {
-      return res.status(400).json({ error: 'All fields are required' });
+    if (!amount || !customer_phone) { // Remove my_preferred_bank_code check if you're hardcoding it
+      return res.status(400).json({ error: 'amount and customer_phone are required' });
     }
 
-    // Generate the random invoice reference
     const invoice_reference = generateInvoiceReference();
 
-    // Make the POST request to the external API
     const response = await axios.post(
       `${BASE_URL}/third-party/temporary-account-checkout`,
       {
         amount,
         invoice_reference,
         customer_phone,
-        my_preferred_bank_code:  '090504'
+        my_preferred_bank_code: '090504' // Hardcoded, so no need to require from client
       },
       {
         headers: {
-          ApiKey: API_KEY,
+          ApiKey: API_KEY, // Keep this for the external API call
           'Content-Type': 'application/json',
         }
       }
     );
 
+    res.status(200).json(response.data);
+  } catch (error) {
     // Respond to the client with the API response
     res.status(200).json(response.data);
   } catch (error) {
