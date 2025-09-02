@@ -136,9 +136,9 @@ app.post('/api/create-virtual-account', async (req, res) => {
       phone_number,
       bvn,
       nin,
-      preferred_bank: '090504',
+      preferred_bank: '090672',
       notification_status: '0',
-      settlement_type: '0',
+      settlement_type: '1',
     };
 
     const response = await axios.post(
