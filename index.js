@@ -440,7 +440,7 @@ app.post('/api/virtual-accounts/temporary', upload.none(), async (req, res) => {
         amount,
         invoice_reference,
         customer_phone,
-        my_preferred_bank_code: '090504' // Hardcoded, so no need to require from client
+        my_preferred_bank_code: '090672' // Hardcoded, so no need to require from client
       },
       {
         headers: {
