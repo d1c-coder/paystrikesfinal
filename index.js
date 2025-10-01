@@ -424,11 +424,12 @@ app.post('/api/airtime-purchase', async (req, res) => {
     });
   }
 });
+
 app.post('/api/virtual-accounts/temporary', upload.none(), async (req, res) => {
   try {
     const { amount, customer_phone, my_preferred_bank_code } = req.body;
 
-    if (!amount || !customer_phone) { // Remove my_preferred_bank_code check if you're hardcoding it
+    if (!amount || !customer_phone) {
       return res.status(400).json({ error: 'amount and customer_phone are required' });
     }
 
@@ -440,11 +441,11 @@ app.post('/api/virtual-accounts/temporary', upload.none(), async (req, res) => {
         amount,
         invoice_reference,
         customer_phone,
-        my_preferred_bank_code: '090672' // Hardcoded, so no need to require from client
+        my_preferred_bank_code: '090672'
       },
       {
         headers: {
-          ApiKey: API_KEY, // Keep this for the external API call
+          ApiKey: API_KEY,
           'Content-Type': 'application/json',
         }
       }
@@ -452,11 +453,7 @@ app.post('/api/virtual-accounts/temporary', upload.none(), async (req, res) => {
 
     res.status(200).json(response.data);
   } catch (error) {
-    // Respond to the client with the API response
-    res.status(200).json(response.data);
-  } catch (error) {
     console.error('Error in temporary account checkout:', error.message);
-    // Handle errors from the API or other issues
     if (error.response) {
       res.status(error.response.status).json({
         error: error.response.data || 'Error occurred during the request',
