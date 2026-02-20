@@ -136,7 +136,7 @@ app.post('/api/create-virtual-account', async (req, res) => {
       phone_number,
       bvn,
       nin,
-      preferred_bank: '090672',
+      preferred_bank: '090645',
       notification_status: '0',
       settlement_type: '1',
     };
