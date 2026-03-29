@@ -464,8 +464,8 @@ app.post('/api/virtual-accounts/temporary', upload.none(), async (req, res) => {
   }
 });
 
-// Route to handle wallet account transfers
-app.post('/api/wallet-transfer', async (req, res) => {
+// Route to handle bank transfers (wallet to bank)
+app.post('/api/wallet-transfer', upload.none(), async (req, res) => {
   try {
     const { bank_code, account_number, amount, transaction_pin, narration } = req.body;
 
@@ -476,14 +476,13 @@ app.post('/api/wallet-transfer', async (req, res) => {
       });
     }
 
-    const formData = {
-      bank_code,
-      account_number,
-      amount,
-      transaction_pin,
-      narration,
-      
-    };
+    // Build multipart/form-data payload to match WirelessPay API requirement
+    const formData = new FormData();
+    formData.append('bank_code', bank_code);
+    formData.append('account_number', account_number);
+    formData.append('amount', amount);
+    formData.append('transaction_pin', transaction_pin);
+    formData.append('narration', narration);
 
     const response = await axios.post(
       `${BASE_URL}/third-party/transfer`,
@@ -491,7 +490,7 @@ app.post('/api/wallet-transfer', async (req, res) => {
       {
         headers: {
           ApiKey: API_KEY,
-          'Content-Type': 'application/json',
+          ...formData.getHeaders(),
         },
       }
     );
