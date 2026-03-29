@@ -17,9 +17,14 @@ const multer = require('multer');
 const upload = multer();
 
 // Middleware
-app.use(express.urlencoded({ extended: true })); // 👈 Important!
-app.use(cors()); // Allow cross-origin requests
-app.use(express.json()); // Parse JSON payloads
+app.use(express.urlencoded({ extended: true }));
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'ApiKey', 'APIKEY', 'apikey'],
+}));
+app.options('*', cors()); // Handle preflight OPTIONS requests for all routes
+app.use(express.json());
 
 const VALID_API_KEY = process.env.WIRELESS_PAY_API_KEY;
 // Utility function to generate a random invoice reference
