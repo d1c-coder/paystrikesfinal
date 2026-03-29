@@ -516,6 +516,52 @@ app.post('/api/wallet-transfer', async (req, res) => {
   }
 });
 
+// Route to swap virtual account funds to main wallet
+app.post('/api/virtual-to-wallet-transfer', upload.none(), async (req, res) => {
+  try {
+    const { virtual_account_number, transaction_pin, amount } = req.body;
+
+    if (!virtual_account_number || !transaction_pin || !amount) {
+      return res.status(400).json({
+        error: 'virtual_account_number, transaction_pin, and amount are required',
+      });
+    }
+
+    const response = await axios.post(
+      `${BASE_URL}/third-party/virtual-to-wallet-transfer`,
+      {
+        virtual_account_number,
+        transaction_pin,
+        amount,
+      },
+      {
+        headers: {
+          ApiKey: API_KEY,
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+
+    console.log('Virtual to wallet transfer successful:', response.data);
+    res.status(200).json({
+      message: 'Transfer successful',
+      data: response.data,
+    });
+  } catch (error) {
+    console.error('Error in virtual-to-wallet transfer:', error.response?.data || error.message);
+    if (error.response) {
+      const { status, data } = error.response;
+      return res.status(status).json({
+        error: data?.message || 'An error occurred during the transfer',
+      });
+    }
+
+    res.status(500).json({
+      error: 'An unexpected error occurred during the transfer',
+    });
+  }
+});
+
 
 // /api/send-invitation endpoint
 app.post('/api/send-invitation', async (req, res) => {
