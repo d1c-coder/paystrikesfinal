@@ -381,7 +381,7 @@ app.post('/api/verify-account', async (req, res) => {
 });
 
 // Route to purchase airtime
-app.post('/api/airtime-purchase', async (req, res) => {
+app.post('/api/airtime-purchase', upload.none(), async (req, res) => {
   const { phone, amount, network, transaction_pin } = req.body;
 
   // Validate required parameters
@@ -391,19 +391,29 @@ app.post('/api/airtime-purchase', async (req, res) => {
     });
   }
 
+  // Validate network value
+  const validNetworks = ['mtn', 'glo', '9mobile', 'airtel'];
+  if (!validNetworks.includes(network.toLowerCase())) {
+    return res.status(400).json({
+      error: 'network must be one of: mtn, glo, 9mobile, airtel',
+    });
+  }
+
   try {
+    // Build multipart/form-data payload to match WirelessPay API requirement
+    const formData = new FormData();
+    formData.append('phone', phone);
+    formData.append('amount', amount);
+    formData.append('network', network.toLowerCase());
+    formData.append('transaction_pin', transaction_pin);
+
     const response = await axios.post(
       `${BASE_URL}/third-party/airtime/airtime-purchase`,
-      {
-        phone,
-        amount,
-        network,
-        transaction_pin,
-      },
+      formData,
       {
         headers: {
-          ApiKey: API_KEY,
-          'Content-Type': 'application/json',
+          APIKEY: API_KEY,
+          ...formData.getHeaders(),
         },
       }
     );
@@ -526,17 +536,18 @@ app.post('/api/virtual-to-wallet-transfer', upload.none(), async (req, res) => {
       });
     }
 
+    const formData = new FormData();
+    formData.append('virtual_account_number', virtual_account_number);
+    formData.append('transaction_pin', transaction_pin);
+    formData.append('amount', amount);
+
     const response = await axios.post(
       `${BASE_URL}/third-party/virtual-to-wallet-transfer`,
-      {
-        virtual_account_number,
-        transaction_pin,
-        amount,
-      },
+      formData,
       {
         headers: {
           ApiKey: API_KEY,
-          'Content-Type': 'multipart/form-data',
+          ...formData.getHeaders(),
         },
       }
     );
