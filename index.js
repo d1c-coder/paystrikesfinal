@@ -15,6 +15,7 @@ const TURNSTILE_SECRET = process.env.TURNSTILE_SECRET;
 // Middleware to parse form data
 const multer = require('multer');
 const upload = multer();
+const FormData = require('form-data');
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
